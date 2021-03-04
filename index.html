@@ -1209,12 +1209,14 @@
         function chooseCharType() {
             
             locationType = document.getElementById("locationTypeSelection").value;
+            locationType = parseInt( locationType );
             
             if ( locationType == 0 ) {
                 locationType = Math.ceil( Math.random() * raceArray.length );
             }
             
             realmType = document.getElementById("realmTypeSelection").value;
+            realmType = parseInt( realmType );
             
             if ( realmType == 0 ) {
                 realmType = Math.ceil( Math.random() * raceArray.length );
@@ -1279,9 +1281,13 @@
 
             typeofChar = charType[i].typeName;
             
-            document.getElementById("charLabel").innerHTML = "Realm: " + document.getElementById("realmTypeSelection").innerText.split("\n")[realmType];
+//            document.getElementById("charLabel").innerHTML = "Realm: " + document.getElementById("realmTypeSelection").innerText.split("\n")[realmType];
+  
+            document.getElementById("charLabel").innerHTML = "Realm: " + ["Mostly Human","Mostly Elven","Mostly Dwarven","Mostly Halfling","Mostly Orc","Mostly Goblin"][realmType-1];
 
-            document.getElementById("charLabel").innerHTML += ", Location: " + document.getElementById("locationTypeSelection").innerText.split("\n")[locationType];
+//            document.getElementById("charLabel").innerHTML += ", Location: " + document.getElementById("locationTypeSelection").innerText.split("\n")[locationType];
+
+            document.getElementById("charLabel").innerHTML += ", Location: " + ["City","Court","Port","Village","Countryside","Road","Wilderness"][locationType];
 
             document.getElementById("charLabel").innerHTML += ",  Type: " + typeofChar; // + (charMartial?" (martial)":'');
             
@@ -1424,7 +1430,7 @@
         <div id="charLabel"></div>
         <br>
         
-        <textarea rows="3" style="font-size:2vh; width: 90%; height: 50vh; " id="characterBox">
+        <textarea rows="3" style="font-size:2vh; font-family: Courier;  width: 90%; height: 50vh; " id="characterBox">
                 
             Make some choices above and press Generate!
         
