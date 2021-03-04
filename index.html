@@ -705,7 +705,7 @@
                "Joiner",  
                "Leatherworker",  
                "Potter",  
-               "Sculptor]",  
+               "Sculptor",  
                "Vintner",  
                "Weaver",
                "Mason",
@@ -1287,7 +1287,7 @@
 
 //            document.getElementById("charLabel").innerHTML += ", Location: " + document.getElementById("locationTypeSelection").innerText.split("\n")[locationType];
 
-            document.getElementById("charLabel").innerHTML += ", Location: " + ["City","Court","Port","Village","Countryside","Road","Wilderness"][locationType];
+            document.getElementById("charLabel").innerHTML += ", Location: " + ["City","Court","Port","Village","Countryside","Road","Wilderness"][locationType-1];
 
             document.getElementById("charLabel").innerHTML += ",  Type: " + typeofChar; // + (charMartial?" (martial)":'');
             
