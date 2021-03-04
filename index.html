@@ -1,0 +1,2060 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>NPCs for The Fantasy Trip </title>
+    </head>
+    
+    <script>
+    
+//        Establish Variables
+        
+        function initializeApp() {
+        
+            charType = [
+                
+                // You can add new character types just by following the crazy format.
+                // They will automatically appear in the menus and randomization.
+                // chanceMartial is the probability that an NPC of that type will have weapons
+                // skills. illicit means the type is illegal and will have a plausible cover
+                // profession. Note that they won't have the skills for that profession, so close
+                // questioning could blow the cover.
+                // 
+                // An NPC will have all the Required talents for their type. They will have a 
+                // random amount of optional Talents for their profession. They will also have a 
+                // random amount of anyOneTalents and  less frequently they will have something from 
+                // casualTalents. Those lists are below if you want add something to those.
+                //
+                // You will see lists of professions, crafts, and trades. If you add to these in the
+                // correct format your additions will be used by the randomizers.
+                // 
+                // Frequency is the likely hood of finding a character of that type in the 
+                // listed types of locations. The order is the same as the menu:
+                
+                // [ city, court, port, village, countryside, road, wilderness]
+                
+                // A 0 means you will never find that type of char in that location.
+                // A 1 means it's rare. A 10 means that character type is a common appearance
+                // at that location. That should be the maximum except for really unusual types. 
+                
+                // Follow the format exactly or things will break. If you make a change and the 
+                // buttons don't seeem to work at all, it's nearly certain you made a syntax 
+                // error. You won't see an error message, the buttons just won't work. 
+                
+                {
+                    "typeName": "Pilgrim",
+                    "minAge": 25,
+                    "maxAge": 65,
+                    "minIQ": 9,
+                    "maxIQ": 12,
+                    "minDX": 9,
+                    "minST": 8,
+                    "chanceMartial": 0.2,
+                    "class": "Common",
+                    "illicit": 0,
+                    "requiredTalents": [48], 
+                    "optionalTalents": [39,57],
+                    "equipment": ["holy relics","censor","religious scrolls","ceremonial garb"],
+                    "notes": "If headed in the opposite direction as the characters may know helpful things about the road ahead.",
+                    "frequency": [2,1,4,5,6,10,2]
+                },
+                {
+                    "typeName": "Merchant",
+                    "minAge": 25,
+                    "maxAge": 65,
+                    "minIQ": 12,
+                    "maxIQ": 13,
+                    "minDX": 9,
+                    "minST": 8,
+                    "chanceMartial": 0.5,
+                    "class": "Upper",
+                    "illicit": 0,
+                    "requiredTalents": [56,83], 
+                    "optionalTalents": [49,2],
+                    "equipment": ["accounts scrolls","letters of introduction","currency exchange charts","writing kit"],
+                    "notes": "",
+                    "frequency": [10,3,10,4,1,1,0]
+                },
+                {
+                    "typeName": "Bandit",
+                    "minAge": 18,
+                    "maxAge": 45,
+                    "minIQ": 8,
+                    "maxIQ": 12,
+                    "minDX": 11,
+                    "minST": 10,
+                    "chanceMartial": 0.99999999,
+                    "illicit": 1,
+                    "class": "Common",
+                    "requiredTalents": [1], 
+                    "optionalTalents": [49,76],
+                    "equipment": ["emtpy sacks","rope"],
+                    "notes": "",
+                    "frequency": [1,0,0,5,10,10,1]
+                },
+                {
+                    "typeName": "Cutpurse",
+                    "minAge": 16,
+                    "maxAge": 29,
+                    "minIQ": 9,
+                    "maxIQ": 11,
+                    "minDX": 11,
+                    "minST": 10,
+                    "chanceMartial": 0.4,
+                    "class": "Lower",
+                    "illicit": 1,
+                    "requiredTalents": [36,50,51], 
+                    "optionalTalents": [1,10,35,47],
+                    "equipment": ["small knife","pry bar"],
+                    "notes": "",
+                    "frequency": [10,0,10,4,3,2,0]
+                },                {
+                    "typeName": "Burglar",
+                    "minAge": 10,
+                    "maxAge": 40,
+                    "minIQ": 9,
+                    "maxIQ": 11,
+                    "minDX": 11,
+                    "minST": 9,
+                    "chanceMartial": 0.2,
+                    "class": "Common",
+                    "illicit": 1,
+                    "requiredTalents": [36,40,50], 
+                    "optionalTalents": [1,2,10,35,36,41,51],
+                    "equipment": ["small knife","pry bar","rope","lock picks"],
+                    "notes": "",
+                    "frequency": [10,0,10,4,0,0,0]
+                },
+                {
+                    "typeName": "Pickpocket",
+                    "minAge": 16,
+                    "maxAge": 29,
+                    "minIQ": 9,
+                    "maxIQ": 11,
+                    "minDX": 11,
+                    "minST": 9,
+                    "chanceMartial": 0.2,
+                    "class": "Common",
+                    "illicit": 1,
+                    "requiredTalents": [36,47,51], 
+                    "optionalTalents": [1,2,10,50],
+                    "equipment": [],
+                    "notes": "",
+                    "frequency": [10,1,10,2,0,0,0]
+                },
+                {
+                    "typeName": "Mugger",
+                    "minAge": 16,
+                    "maxAge": 29,
+                    "minIQ": 9,
+                    "maxIQ": 11,
+                    "minDX": 10,
+                    "minST": 11,
+                    "chanceMartial": 0.9999,
+                    "class": "Lower",
+                    "illicit": 1,
+                    "requiredTalents": [1,3,51], 
+                    "optionalTalents": [2,10,52],
+                    "equipment": [],
+                    "notes": "",
+                    "frequency": [10,0,10,4,0,0,0]
+                },
+                {
+                    "typeName": "Tradesperson",
+                    "minAge": 20,
+                    "maxAge": 50,
+                    "minIQ": 10,
+                    "maxIQ": 11,
+                    "minDX": 10,
+                    "minST": 10,
+                    "chanceMartial": 0.2,
+                    "class": "Common",
+                    "illicit": 0,
+                    "requiredTalents": [14,15], 
+                    "optionalTalents": [10,49,51,56],
+                    "equipment": [],
+                    "notes": "",
+                    "frequency": [10,0,10,10,5,5,0]
+                },
+                {
+                    "typeName": "Craftsperson",
+                    "minAge": 20,
+                    "maxAge": 60,
+                    "minIQ": 10,
+                    "maxIQ": 12,
+                    "minDX": 11,
+                    "minST": 10,
+                    "chanceMartial": 0.2,
+                    "class": "Common",
+                    "illicit": 0,
+                    "requiredTalents": [14,16], 
+                    "optionalTalents": [10,49,51,56],
+                    "equipment": [],
+                    "notes": "",
+                    "frequency": [10,0,10,10,5,5,1]
+                },
+                {
+                    "typeName": "Professional",
+                    "minAge": 22,
+                    "maxAge": 60,
+                    "minIQ": 11,
+                    "maxIQ": 13,
+                    "minDX": 10,
+                    "minST": 9,
+                    "chanceMartial": 0.1,
+                    "class": "Upper",
+                    "illicit": 0,
+                    "requiredTalents": [14,17], 
+                    "optionalTalents": [10,49,51,56],
+                    "equipment": [],
+                    "notes": "",
+                    "frequency": [10,10,10,5,5,5,1]
+                },
+                {
+                    "typeName": "Squire",
+                    "minAge": 16,
+                    "maxAge": 30,
+                    "minIQ": 10,
+                    "maxIQ": 12,
+                    "minDX": 10,
+                    "minST": 9,
+                    "chanceMartial": 0.999999,
+                    "class": "Upper",
+                    "illicit": 0,
+                    "requiredTalents": [13], 
+                    "optionalTalents": [37,55,68,74,66],
+                    "equipment": [],
+                    "notes": "",
+                    "frequency": [5,10,5,10,5,5,1]
+                },
+                {
+                    "typeName": "Bowyer",
+                    "minAge": 25,
+                    "maxAge": 60,
+                    "minIQ": 10,
+                    "maxIQ": 12,
+                    "minDX": 10,
+                    "minST": 9,
+                    "chanceMartial": 0.5,
+                    "class": "Common",
+                    "illicit": 0,
+                    "requiredTalents": [7,8,55], 
+                    "optionalTalents": [44,14,80,86],
+                    "equipment": [],
+                    "notes": "",
+                    "frequency": [8,0,8,8,5,1]
+                },
+                {
+                    "typeName": "Fletcher",
+                    "minAge": 25,
+                    "maxAge": 60,
+                    "minIQ": 10,
+                    "maxIQ": 12,
+                    "minDX": 10,
+                    "minST": 9,
+                    "chanceMartial": 0.5,
+                    "class": "Common",
+                    "illicit": 0,
+                    "requiredTalents": [7,8,55], 
+                    "optionalTalents": [44,14,80,86],
+                    "equipment": [],
+                    "notes": "",
+                    "frequency": [8,0,8,8,5,1]
+                },
+                {
+                    "typeName": "Con Man",
+                    "minAge": 15,
+                    "maxAge": 75,
+                    "minIQ": 10,
+                    "maxIQ": 12,
+                    "minDX": 10,
+                    "minST": 9,
+                    "chanceMartial": 0.3,
+                    "class": "Common",
+                    "illicit": 1,
+                    "requiredTalents": [2,10,14,39], 
+                    "optionalTalents": [21,36,51,56],
+                    "equipment": [],
+                    "notes": "",
+                    "frequency": [10,4,10,3,1,1,0]
+                },
+                {
+                    "typeName": "Money Lender",
+                    "minAge": 40,
+                    "maxAge": 60,
+                    "minIQ": 10,
+                    "maxIQ": 12,
+                    "minDX": 10,
+                    "minST": 9,
+                    "chanceMartial": 0.5,
+                    "class": "Common",
+                    "illicit": 0,
+                    "requiredTalents": [10,14,49,56,67], 
+                    "optionalTalents": [83],
+                    "equipment": [],
+                    "notes": "",
+                    "frequency": [10,3,10,8,2,0,0]
+                },
+                {
+                    "typeName": "Town Laborer",
+                    "minAge": 16,
+                    "maxAge": 60,
+                    "minIQ": 9,
+                    "maxIQ": 11,
+                    "minDX": 10,
+                    "minST": 10,
+                    "chanceMartial": 0.2,
+                    "class": "Common",
+                    "illicit": 0,
+                    "requiredTalents": [], 
+                    "optionalTalents": [2,39],
+                    "equipment": [],
+                    "notes": "",
+                    "frequency": [10,0,10,15,2,2,0]
+                },
+                {
+                    "typeName": "Farm Laborer",
+                    "minAge": 16,
+                    "maxAge": 60,
+                    "minIQ": 9,
+                    "maxIQ": 11,
+                    "minDX": 10,
+                    "minST": 10,
+                    "chanceMartial": 0.3,
+                    "class": "Common",
+                    "illicit": 0,
+                    "requiredTalents": [], 
+                    "optionalTalents": [],
+                    "equipment": [],
+                    "notes": "",
+                    "frequency": [0,0,0,10,15,0,0]
+                },
+                {
+                    "typeName": "Barber",
+                    "minAge": 30,
+                    "maxAge": 60,
+                    "minIQ": 11,
+                    "maxIQ": 12,
+                    "minDX": 10,
+                    "minST": 9,
+                    "chanceMartial": 0.5,
+                    "class": "Common",
+                    "illicit": 0,
+                    "requiredTalents": [999,10,74], 
+                    "optionalTalents": [2,39],
+                    "equipment": [],
+                    "notes": "",
+                    "frequency": [10,3,10,8,2,0,0]
+                },
+                {
+                    "typeName": "Shop Worker",
+                    "minAge": 20,
+                    "maxAge": 60,
+                    "minIQ": 8,
+                    "maxIQ": 10,
+                    "minDX": 10,
+                    "minST": 9,
+                    "chanceMartial": 0.5,
+                    "class": "Common",
+                    "illicit": 0,
+                    "requiredTalents": [14], 
+                    "optionalTalents": [49,56],
+                    "equipment": [],
+                    "notes": "",
+                    "frequency": [10,0,10,8,2,0]
+                },
+                {
+                    "typeName": "Fisherman",
+                    "minAge": 20,
+                    "maxAge": 60,
+                    "minIQ": 10,
+                    "maxIQ": 12,
+                    "minDX": 10,
+                    "minST": 10,
+                    "chanceMartial": 0.5,
+                    "class": "Common",
+                    "illicit": 0,
+                    "requiredTalents": [20], 
+                    "optionalTalents": [11,22],
+                    "equipment": [],
+                    "notes": "",
+                    "frequency": [0,0,10,0,2,0]
+                },
+                {
+                    "typeName": "Sailor",
+                    "minAge": 20,
+                    "maxAge": 60,
+                    "minIQ": 10,
+                    "maxIQ": 12,
+                    "minDX": 10,
+                    "minST": 10,
+                    "chanceMartial": 0.5,
+                    "class": "Common",
+                    "illicit": 0,
+                    "requiredTalents": [20], 
+                    "optionalTalents": [11,22],
+                    "equipment": [],
+                    "notes": "",
+                    "frequency": [0,0,10,0,2,0]
+                },
+                {
+                    "typeName": "Hunter",
+                    "minAge": 20,
+                    "maxAge": 60,
+                    "minIQ": 10,
+                    "maxIQ": 12,
+                    "minDX": 10,
+                    "minST": 10,
+                    "chanceMartial": 0.5,
+                    "class": "Common",
+                    "illicit": 0,
+                    "requiredTalents": [59,63], 
+                    "optionalTalents": [10],
+                    "equipment": [],
+                    "notes": "",
+                    "frequency": [0,0,0,5,2,10]
+                },
+                {
+                    "typeName": "Trapper",
+                    "minAge": 20,
+                    "maxAge": 60,
+                    "minIQ": 10,
+                    "maxIQ": 12,
+                    "minDX": 10,
+                    "minST": 10,
+                    "chanceMartial": 0.5,
+                    "class": "Common",
+                    "illicit": 0,
+                    "requiredTalents": [59,63], 
+                    "optionalTalents": [10,11,22],
+                    "equipment": [],
+                    "notes": "",
+                    "frequency": [0,0,0,5,2,10]
+                },
+                {
+                    "typeName": "Forester",
+                    "minAge": 20,
+                    "maxAge": 60,
+                    "minIQ": 10,
+                    "maxIQ": 12,
+                    "minDX": 10,
+                    "minST": 10,
+                    "chanceMartial": 0.5,
+                    "class": "Common",
+                    "illicit": 0,
+                    "requiredTalents": [59,63], 
+                    "optionalTalents": [10],
+                    "equipment": [],
+                    "notes": "",
+                    "frequency": [0,0,0,5,2,10]
+                },
+                {
+                    "typeName": "Armorer",
+                    "minAge": 25,
+                    "maxAge": 55,
+                    "minIQ": 10,
+                    "maxIQ": 12,
+                    "minDX": 10,
+                    "minST": 10,
+                    "chanceMartial": 0.999,
+                    "class": "Common",
+                    "illicit": 0,
+                    "requiredTalents": [55], 
+                    "optionalTalents": [14,56],
+                    "equipment": [],
+                    "notes": "",
+                    "frequency": [5,1,5,4,1,1,0]
+                },
+                {
+                    "typeName": "Goldsmith",
+                    "minAge": 20,
+                    "maxAge": 60,
+                    "minIQ": 11,
+                    "maxIQ": 12,
+                    "minDX": 10,
+                    "minST": 10,
+                    "chanceMartial": 0.5,
+                    "class": "Common",
+                    "illicit": 0,
+                    "requiredTalents": [70], 
+                    "optionalTalents": [14],
+                    "equipment": [],
+                    "notes": "",
+                    "frequency": [5,5,5,2,1,0,0]
+                },
+                {
+                    "typeName": "Jester",
+                    "minAge": 20,
+                    "maxAge": 60,
+                    "minIQ": 11,
+                    "maxIQ": 12,
+                    "minDX": 10,
+                    "minST": 10,
+                    "chanceMartial": 0.1,
+                    "class": "Common",
+                    "illicit": 0,
+                    "requiredTalents": [38,55], 
+                    "optionalTalents": [10,66],
+                    "equipment": [],
+                    "notes": "",
+                    "frequency": [1,8,1,1,0,0,0]
+                },
+                {
+                    "typeName": "Bard",
+                    "minAge": 20,
+                    "maxAge": 60,
+                    "minIQ": 9,
+                    "maxIQ": 12,
+                    "minDX": 10,
+                    "minST": 10,
+                    "chanceMartial": 0.5,
+                    "class": "Common",
+                    "illicit": 0,
+                    "requiredTalents": [38], 
+                    "optionalTalents": [10,60],
+                    "equipment": [],
+                    "notes": "",
+                    "frequency": [10,10,10,10,5,5,1]
+                }
+
+
+                
+                
+            ] 
+            
+            typeLocationFrequency =[ 0, 0, 0, 0, 0, 0, 0 ];
+            
+            optionString="<option value='Random'>Random</option>";
+            for ( i=0; i<charType.length; i++ ) {
+                
+                optionString += "<option value = '";
+                optionString += charType[i].typeName;
+                optionString += "'>";
+                optionString += charType[i].typeName;
+                optionString += "</option>";
+                
+                for ( j = 0; j<7; j++ ) {
+                    typeLocationFrequency =+ charType[i].frequency[j];
+                }
+                
+            }
+            
+            
+            document.getElementById("charTypeSelection").innerHTML = optionString;
+
+            nameArray = document.getElementById("namesDiv").innerText.match(/\w+/g);
+            
+        // name, min IQ, cost, Pre Req, category
+        talentArrayItems = 5;
+        talentRequiredIQ=1;
+        talentCost = 2;
+        talentArray = [ "uselessness", 7, 0, 0, 0,
+                        "Brawling", 7, 1, 0, 10,
+                        "Carousing", 7, 1, 0, 9,
+                        "Knife", 7, 1, 0, 2,
+                        "Sword", 7, 2, 0, 2,
+                        "Ax/Mace", 7, 2, 0, 2,
+                        "Pole Weapons", 7, 2, 0, 2,
+                        "Bow", 7, 2, 0, 2,
+                        "Crossbow", 7, 1, 0, 2,
+                        "Shield", 7, 1, 0, 2,
+                        "Area Knowledge", 8, 1, 0, 1, // #10
+                        "Boating", 8, 1, 0, 6,
+                        "Guns", 8, 2, 0, 3,
+                        "Horsemanship", 8, 1, 0, 8,
+                        "Literacy", 8, 1, 0, 1,
+                        "A Trade", 8, 1, 0, 11,
+                        "A Career", 8, 1, 0, 11,
+                        "A Profession", 8, 1, 0, 11,
+                        "Quick-Draw", 8, 1, 0, 4,
+                        "Running", 8, 2, 0, 1,
+                        "Seamanship", 8, 1, 0, 6, // #20
+                        "Sex Appeal", 8, 1, 0, 9,
+                        "Swimming", 8, 1, 0, 1,
+                        "Thrown Weapons", 8, 2, 0, 4,
+                        "Blowgun", 8, 1, 0, 3,
+                        "Bola", 8, 1, 0, 3,
+                        "Boomerang", 8, 1, 0, 3,
+                        "Cestus", 8, 1, 0, 3,
+                        "Lasso", 8, 1, 0, 3,
+                        "Net and Trident", 8, 1, 0, 3,
+                        "Nunchuks", 8, 1, 0, 3, // #30
+                        "Quarterstaff", 8, 1, 0, 3,
+                        "Sha-ken", 8, 1, 0, 3,
+                        "Spear Thrower", 8, 1, 6, 3, // alternate Pre-req is 23
+                        "Whip", 8, 1, 0, 3,
+                        "Acute Hearing", 9, 2, 0, 5,
+                        "Alertness", 9, 2, 0, 5,
+                        "Animal Handler", 9, 2, 0, 8,
+                        "Bard", 9, 2, 0, 9,
+                        "Charisma", 9, 2, 0, 9,
+                        "Climbing", 9, 1, 0, 1, // #40
+                        "Detect Traps", 9, 2, 0, 5, //costs only 1 if you have 36
+                        "Diving", 9, 1, 22, 1,
+                        "Driver", 9, 1, 0, 8,
+                        "Missile Weapons 1", 9, 1, 0, 4,
+                        "Missile Weapons 2", 9, 1, 44, 4,
+                        "Missile Weapons 3", 9, 1, 45, 4,
+                        "Pickpocket", 9, 1, 0, 5,
+                        "Priest", 9, 1, 0, 6,
+                        "Recognize Value", 9, 1, 0, 11,
+                        "Silent Movement", 9, 2, 0, 5,   //  #50
+                        "Streetwise", 9, 1, 0, 9,
+                        "Toughness 1", 9, 2, 0, 10,  // Str=12+
+                        "Toughness 2", 9, 2, 52, 10, // Str=14+
+                        "Acrobatics", 10, 2, 0, 6,  // Dex=12+
+                        "Armourer", 10, 1, 0, 6,
+                        "Business Sense", 10, 2, 0, 11,
+                        "Diplomacy", 10, 1, 0, 9,
+                        "Mimic", 10, 1, 0, 9,
+                        "Naturalist", 10, 2, 0, 8,
+                        "Poet", 10, 1, 0, 7,         //  #60
+                        "Remove Trap", 10, 1, 41, 5,
+                        "Shield Expertise", 10, 2, 9, 4,
+                        "Tracking", 10, 1, 0, 8,
+                        "Unarmed Combat I", 10, 1, 0, 10,
+                        "Architect/Builder", 11, 1, 0, 6,
+                        "Courtly Graces", 11, 1, 0, 9,
+                        "Detect Lies", 11, 2, 0, 9,
+                        "Expert Horsemanship", 11, 2, 13, 8,
+                        "Fencer", 11, 3, 4, 4, // also Dex=12+
+                        "Goldsmith", 11, 2, 49, 11,               // #70
+                        "Locksmith", 11, 1, 0, 5,
+                        "Master Pickpocket", 11, 1, 47, 5,
+                        "Mechanician", 11, 2, 0, 11, // costs only 1 if you have 61
+                        "Physicker", 11, 2, 0, 7,
+                        "Shipbuilder", 11, 2, 20, 6,
+                        "Tactics", 11, 1, 0, 7,
+                        "Two Weapons", 11, 2, 0, 4, //also Dex=11+
+                        "Unarmed Combat II", 11, 1, 64, 10, // also Dex=11+
+                        "Vet", 11, 2, 0, 8,  // cost is half if you have 74
+                        "Weapon Expertise", 11, 3, 0, 4, // Dex=12+           // #80
+                        "Woodsman", 11, 1, 59, 8,
+                        "Writing", 11, 1, 14, 1,
+                        "Assess Value", 12, 1, 49, 11,
+                        "Captain", 12, 2, 20, 6,
+                        "Expert Naturalist", 12, 2, 59, 8,
+                        "Master Armourer", 12, 2, 55, 6,
+                        "Master Locksmith", 12, 1, 71, 5,    // also Dex=13+
+                        "Stealth", 12, 2, 50, 5,
+                        "Unarmed Combat III", 12, 2, 78,10,
+                        "Ventriloquist", 12, 1, 0, 9,            //    #90
+                        "Chemist", 13, 3, 0, 7,
+                        "Master Fencer", 13, 3, 69, 4, // also Dex=14+
+                        "Master Mechanician", 13, 2, 73, 11,
+                        "Mathematician", 13, 2, 14, 7,
+                        "Scholar", 13, 3, 14, 7,
+                        "Strategist", 13, 2, 76, 7,
+                        "Unarmed Combat IV", 13, 3, 89, 10,  // also Dex=13+, Str=11+
+                        "Weapon Mastery", 13, 3, 80, 4,
+                        "Alchemy", 14, 3, 0, 7,
+                        "Disguise", 14, 2, 0, 9,       // #100
+                        "Master Bard", 14, 2, 38, 9,
+                        "Master Physicker", 14, 2, 74, 7,
+                        "Theologian", 14, 2, 48, 6,
+                        "Unarmed Combat V", 14, 4, 97, 10 // also Str=12+, Dex=14+
+                        
+            
+            ];
+            
+            anyOneTalents = [ 1, 2, 10, 14, 19, 22, 67 ];
+            casualTalents = [ 3, 11, 13, 21, 35, 36, 39, 40, 51, 52, 60, 82 ];
+        
+             tradeArray = [
+               "Farmer",  
+               "Beekeeper",  
+               "Butcher",  
+               "Carpenter",  
+               "Dancer",  
+               "Draper",  
+               "Fisherman",  
+               "Gardener",  
+               "Handyman",  
+               "Miner",  
+               "Scribe",  
+               "Tailor",  
+               "Tanner",  
+               "Woodcarver",
+                 "Cobbler",
+                 "Miller",
+                 "Groom",
+                 "Valet",
+                 "Page",
+                 "Fishmonger",
+                 "Cooper",
+                 "Cartwright",
+                 "Chandler",
+                 "Trapper",
+                 "Harness Maker",
+                 "Ropemaker",
+                 "Saddler",
+                 "Glover",
+                 "Roofer",
+                 "Napier"
+                 
+             ];
+             craftArray = [
+               "Administrator",  
+               "Baker",  
+               "Brewer",  
+               "Cook",  
+               "Herald",  
+               "Jeweler",  
+               "Joiner",  
+               "Leatherworker",  
+               "Potter",  
+               "Sculptor]",  
+               "Vintner",  
+               "Weaver",
+               "Mason",
+                "Shoemaker",
+                 "Blacksmith",
+                 "Falconer",
+                 "Furrier",
+                 "Milliner",
+                 "Cartographer",
+                 "Printer",
+                 "Bookbinder",
+                 "Plumber",
+                 "Lacemaker",
+                 "Lampwright",
+                 "Perfumer",
+                 "Dyer",
+                 "Farrier"
+            ];
+
+            professionArray = [
+               "Portraitist",  
+               "Calligrapher",  
+               "Astrologer",  
+               "Lawyer",
+                 "Seneschal"
+             ];
+            
+            swordArray = [
+                "Rapier (1d)",
+                "Saber (2d-2)",
+                "Shortsword (2d-1)",
+                "Broadsword (2d)",
+                "Bastard Sword (2d+1)",
+                "2-handed Sword (3d-1)"
+            ];
+            
+            clubArray = [
+                "Hatchet (1d)",
+                "Hammer (1d+1)",
+                "Mace (2d-1)",
+                "Small Axe (1d+2)",
+                "War Axe (2d)",
+                "Morningstar (2d+1)",
+                "Great Hammer (2d+2)",
+                "Battleaxe (3d)"
+            ];
+            
+            poleArray = [
+                "Javelin (1d-1)",
+                "Trident (1d)",
+                "Spear (1d+1)",
+                "Halberd (2d)",
+                "Pike Axe (2d+2)"
+            ];
+            
+             bowArray = [
+                 
+                "Sling (1d-2)",
+                "Small Bow (1d-1)",
+                "Horse Bow (1d)",
+                "Long Bow (1d+2)"
+            ]
+
+            raceArray = [ "Human", "Elf", "Dwarf", "Halfling", "Orc", "Goblin" ];            
+            
+        }
+        
+        function generateCharacter() {
+            
+            
+            typeofChar = document.getElementById("charTypeSelection").value;
+            
+            if ( typeofChar == "Random" ) {
+                typeofChar = charType[ Math.floor( Math.random() * charType.length  ) ].typeName;
+            }
+
+            charRace = document.getElementById("charRaceSelection").value;
+
+            if ( charRace == 0 ) {
+                charRace = Math.ceil( Math.random() * raceArray.length );
+            }
+            
+            document.getElementById("charLabel").innerHTML = typeofChar; 
+            
+            makeCharacter();
+        
+        }
+        
+        function makeCharacter() {
+            
+            thisCharType = charType.find( test => test.typeName===typeofChar);
+            
+            charMinAge = charType.find( test => test.typeName===typeofChar).minAge;
+            charMaxAge = charType.find( test => test.typeName===typeofChar).maxAge;
+            charAgeRange = charMaxAge - charMinAge;
+            charAge = charMinAge + Math.floor( Math.random() * charAgeRange );
+                        
+            charMinIQ = charType.find( test => test.typeName===typeofChar).minIQ;
+            charMaxIQ = charType.find( test => test.typeName===typeofChar).maxIQ;
+            charIQRange = charMaxIQ - charMinIQ;
+            charIQ = charMinIQ + Math.floor( Math.random() * charIQRange );
+            
+            charST = charType.find( test => test.typeName===typeofChar).minST;
+            charDX = charType.find( test => test.typeName===typeofChar).minDX;
+            
+            
+            maxAttributes = 32;
+            charRace = parseInt( charRace );
+            console.log("charRace = " + charRace );
+            switch( charRace ) {
+                case 1:
+                        maxAttributes = 32;
+                        break;
+                case 2:
+                        maxAttributes = 32;
+                        if ( charDX < 10 ) {
+                            charDX=10
+                        }
+                        break;
+                case 3:
+                        maxAttributes = 32;
+                        if ( charST < 10 ) {
+                            charST=10
+                        }
+                        break;
+                case 4:
+                        maxAttributes = 30;
+                        charST=4;
+                        if ( charDX < 12 ) {
+                            charDX=12
+                        }
+                        console.log("we got a halfling");
+                        break;
+                case 5:
+                        maxAttributes = 32;
+                        break;
+                case 6:
+                        maxAttributes = 32;
+                        if ( charIQ < 10 ) {
+                            charIQ=10
+                        }
+                        break;
+            }
+            
+            while ( charST + charDX + charIQ < maxAttributes ) {
+                if ( Math.random() < 0.3 ) {
+                    charST++;
+                } else {
+                    charDX++;
+                }
+            }
+            
+            
+            charMartial = ( Math.random() < thisCharType.chanceMartial ? 1 : 0 );
+            
+            charTalentPoints=charIQ;
+            
+            charTalents = [];
+
+            charWeapons="";
+
+            if ( charMartial && charRace == 4 ) {
+                
+                // hobbits need their own weapons...
+                switch ( Math.ceil( Math.random() * 3 )) {
+                    case 1:
+                        charTalents.push(1);
+                        charTalents.push(2);
+                        charWeapons += "Dagger (1d-1)";
+                        charTalentPoints -= 2;
+                        break;
+                    case 2:
+                        charTalents.push(7);
+                        charTalents.push(44);
+                        charTalentPoints -= 3;
+                        charWeapons += "Sling (1d-2)"
+                        break;
+                    case 3:
+                        charTalents.push(32);
+                        charWeapons += "Sha-ken (1d-2)";
+                        break;
+                    
+                }
+                
+                
+            } else if ( charMartial )  {
+                
+                // choose a type
+                // apply the skills
+                // add the appropriate weapons
+                // secondary?
+                // 1/3 + bow, 1/3 + shield, 1/3, bow+MW1+knife
+                
+                if ( Math.random() < 0.75 ) {
+                    
+                    switch ( Math.ceil( Math.random() * 3 )) {
+                        case 1:
+                            charTalents.push(4);
+                            break;
+                        case 2:
+                            charTalents.push(5);
+                            break;
+                        case 3:
+                            charTalents.push(6);
+                            break;
+                    }
+                    
+                    switch ( Math.ceil( Math.random() * 3 )) {
+                        case 1:
+                            charTalents.push(7);
+                            break;
+                        case 2:
+                            charTalents.push(9);
+                            break;
+                    }                    
+                    
+                } else {
+                            charTalents.push(7);
+                            charTalents.push(3);                    
+                }
+                
+                if ( charTalents.indexOf(4) > -1 ) {
+                    switch( charST ) {
+                        case 9:
+                            charWeapons += swordArray[0];
+                            break;
+                        case 10:
+                            charWeapons += swordArray[1];
+                            break;
+                        case 11:
+                            charWeapons += swordArray[2];
+                            break;
+                        case 12:
+                            charWeapons += swordArray[3];
+                            break;
+                        case 13:
+                            charWeapons += swordArray[4];
+                            break;
+                        case 14:
+                            charWeapons += swordArray[5];
+                            break;
+                    }
+                    
+                    charWeapons += ", ";
+                }
+                
+                if ( charTalents.indexOf(5) > -1 ) {
+                    switch( charST ) {
+                        case 9:
+                            charWeapons += clubArray[0];
+                            break;
+                        case 10:
+                            charWeapons += clubArray[1];
+                            break;
+                        case 11:
+                            if ( Math.random() < 0.5 ) {
+                                charWeapons += clubArray[2];
+                            } else {
+                                charWeapons += clubArray[3];
+                            }
+                            break;
+                        case 12:
+                            charWeapons += clubArray[4];
+                            break;
+                        case 13:
+                            charWeapons += clubArray[5];
+                            break;
+                        case 14:
+                            charWeapons += clubArray[6];
+                            break;
+                        case 15:
+                            charWeapons += clubArray[7];
+                            break;
+                        default:
+                            charWeapons += "Club (1d" + (barehandedDamage(charST)+3>0?"+":"") + (barehandedDamage(charST)+3 != 0 ? barehandedDamage(charST)+3 : "") + ")";
+                            break;                            
+                    }
+                    charWeapons += ", ";
+                }
+            
+                if ( charTalents.indexOf(6) > -1 ) {
+                        switch( charST ) {
+                            case 9:
+                                charWeapons += poleArray[0];
+                                break;
+                            case 10:
+                                charWeapons += poleArray[1];
+                                break;
+                            case 11:
+                            case 12:
+                                charWeapons += poleArray[2];
+                                break;
+                            case 13:
+                            case 14:
+                                charWeapons += poleArray[3];
+                                break;
+                            case 15:
+                                charWeapons += poleArray[4];
+                                break;
+                        }
+                        charWeapons += ", ";
+                }
+
+                if ( charTalents.indexOf(7) > -1 ) {
+                        switch( charST ) {
+                            case 9:
+                                charWeapons += bowArray[1];
+                                break;
+                            case 10:
+                                charWeapons += bowArray[2];
+                                break;
+                            case 11:
+                                charWeapons += bowArray[3];
+                                break;
+                            default:
+                                charWeapons += bowArray[0];
+                                break;
+                        }
+                        charWeapons += ", ";
+                }
+            }
+            
+            if ( charWeapons.substr( charWeapons.length-2, 2 ) == ", ") {
+                
+                charWeapons = charWeapons.substring( 0, charWeapons.length - 2 );
+            
+            }
+                
+            for ( i = 0; i<thisCharType.requiredTalents.length; i++ ) {
+                
+                switch ( thisCharType.requiredTalents[i] ) {
+                        
+                    case 15:
+                        charTalents.push( thisCharType.requiredTalents[i] );
+                        charTalentPoints -= 1;
+                        actualJob = tradeArray[ Math.floor( Math.random() * tradeArray.length ) ];
+                        break;
+                        
+                    case 16:
+                        charTalents.push( thisCharType.requiredTalents[i] );
+                        charTalentPoints -= 2;
+                        actualJob = craftArray[ Math.floor( Math.random() * craftArray.length ) ];
+                        break;
+                        
+                    case 17:
+                        charTalents.push( thisCharType.requiredTalents[i] );
+                        charTalentPoints -= 3;
+                        actualJob = professionArray[ Math.floor( Math.random() * professionArray.length ) ];
+                        break;
+                        
+                    default:
+
+                        charTalents.push( thisCharType.requiredTalents[i] );
+                        charTalentPoints -= talentArray[ talentArrayItems * charTalents[i] + talentCost ];
+                        actualJob=charType;
+                        break;
+                }
+                
+            }
+            
+            for ( i=0; i<thisCharType.optionalTalents.length; i++ ) {
+                
+                if ( talentArray[ thisCharType.optionalTalents[i] * talentArrayItems + talentRequiredIQ ] <= charIQ && talentArray[ thisCharType.optionalTalents[i] * talentArrayItems + talentCost ] < charTalentPoints && Math.random() < 0.5 ) {
+                    charTalents.push(thisCharType.optionalTalents[i] );
+                    charTalentPoints -= talentArray[ thisCharType.optionalTalents[i] * talentArrayItems + talentCost ];
+                } 
+            }
+            
+            while ( charTalentPoints > Math.ceil( Math.random() * 5 ) ) {
+                
+                if ( Math.random() < 0.25 ) {
+                    
+                    candidateTalentnumber = casualTalents[ Math.floor( Math.random() * casualTalents.length ) ];
+                    
+                    if ( talentArray[ candidateTalentnumber * talentArrayItems + talentRequiredIQ ] <= charIQ && talentArray[ candidateTalentnumber * talentArrayItems + talentCost ] <= charTalentPoints && charTalents.indexOf( candidateTalentnumber ) == -1 ) {
+                        
+                        charTalentPoints -= talentArray[ candidateTalentnumber * talentArrayItems + talentCost ];
+                        charTalents.push( candidateTalentnumber );
+                    
+                } else {
+                    
+                    candidateTalentnumber = anyOneTalents[ Math.floor( Math.random() * anyOneTalents.length ) ];
+                    
+                    if ( talentArray[ candidateTalentnumber * talentArrayItems + talentRequiredIQ ] <= charIQ && talentArray[ candidateTalentnumber * talentArrayItems + talentCost ] <= charTalentPoints && charTalents.indexOf( candidateTalentnumber ) == -1 ) {
+                        
+                        charTalentPoints -= talentArray[ candidateTalentnumber * talentArrayItems + talentCost ];
+                        charTalents.push( candidateTalentnumber );
+                        
+                        }
+                    
+                    }
+                
+                }
+            }
+
+            
+            if ( charRace == 2 ) {
+                charMA=12;
+            } else {
+                charMA=10;
+            }
+            
+            if ( charTalents.indexOf(19) > -1 ) {
+                charMA += 2;
+            }
+
+            
+            charSpells="";
+            
+            
+            charAttacks="Bare hands 1d" + (barehandedDamage(charST)>0?"+":"") + (barehandedDamage(charST) != 0 ? barehandedDamage(charST) : "");
+            
+            charArmor="";
+            
+            charEquipment="";
+            if ( Math.random() < 0.5 && thisCharType.equipment.length > 0 ) {
+                charEquipment = thisCharType.equipment[ Math.floor( Math.random() * thisCharType.equipment.length ) ];
+            }
+                        
+            charName = makeAName();
+            
+            if ( ["Tradesperson","Craftsperson","Professional"].indexOf( typeofChar ) == -1 ) {
+                charNotes = charName + " is a " + typeofChar;
+            } else {
+                charNotes = charName + " is a " + actualJob;
+            }
+
+            
+            
+            if ( thisCharType.illicit ) {
+                
+                charNotes += " but will present as a ";
+                
+                if ( thisCharType.class == "Lower" ) {
+                    charNotes += tradeArray[ Math.floor( Math.random() * tradeArray.length ) ];
+                } else {
+                    charNotes += craftArray[ Math.floor( Math.random() * craftArray.length ) ];
+                }
+                
+            }
+            
+            charNotes +=". ";
+            
+            charNotes += thisCharType.notes;
+            
+            //All stats generated, we create the string
+            
+            charString = charName;
+            charString += "\n";
+            
+            charString += raceArray[ charRace -1] + ", age " + charAge + "\n";
+
+            charString += "ST " + charST + ", DX " + charDX + ", IQ " + charIQ + ", MA "+ charMA + "\n";
+            
+            charString += "Talents: ";
+            
+            for ( i=0; i<charTalents.length; i++ ) {
+                
+                switch ( charTalents[i] ) {
+                    case 15:
+                    case 16:
+                    case 17:
+                        charString += actualJob;
+                        break;
+                    case 999:
+                        charString += thisCharType.typeName;
+                        break;
+                    default:
+                        charString += talentArray[ talentArrayItems * charTalents[i]];
+                        break;
+                }
+                
+                if ( i<charTalents.length - 1 ) {
+                    charString +=", ";
+                } else {
+                    if ( charRace == 4 ){
+                        charString +=", Thrown Weapons\n";
+                    } else {
+                        charString +="\n";
+}                }
+                
+            }
+            
+            charString += "Spells: " + charSpells + "\n";
+            
+            charString += "Weapons: " + charWeapons + "\n";
+            
+            charString += "Attacks: " + charAttacks + "\n";
+            
+            charString += "Armor: " + charArmor + "\n";
+            
+            charString += "Equipment: " + charEquipment + "\n";
+            
+            charString += "Special Note: " + charNotes + "\n";
+            
+            document.getElementById("characterBox").value = charString;
+
+            document.getElementById("charLabel").innerHTML += (charMartial?" (martial)":'');
+        }
+        
+        function chooseCharType() {
+            
+            locationType = document.getElementById("locationTypeSelection").value;
+            
+            if ( locationType == 0 ) {
+                locationType = Math.ceil( Math.random() * raceArray.length );
+            }
+            
+            realmType = document.getElementById("realmTypeSelection").value;
+            
+            if ( realmType == 0 ) {
+                realmType = Math.ceil( Math.random() * raceArray.length );
+            }
+            
+            switch ( realmType ) {
+                    case 1:
+                        if ( Math.random() < 0.8 ) {
+                            charRace = 1;
+                        }
+                        {
+                            charRace = Math.ceil( Math.random() * raceArray.length );
+                        }
+                        break;
+                    default:
+                        if ( Math.random() < 0.9 ) {
+                            charRace = realmType;
+                        } else {
+                            switch( Math.ceil( Math.random() * 7 ) ) {
+                                case 1:
+                                case 2:
+                                case 3:
+                                case 4:
+                                    charRace=1;
+                                    break;
+                                case 5:
+                                    charRace=3;
+                                    break;
+                                case 6:
+                                    charRace=5;
+                                    break;
+                                case 7:
+                                    charRace=6;
+                                    break;
+                            }
+                        }
+                        break;
+                    
+            }
+            
+            typeofChar = "Tradesperson";
+            
+            totalFrequency = 0;
+            
+            
+            
+            for ( i=0; i<charType.length; i++ ) {
+                
+                totalFrequency += charType[i].frequency[locationType-1];
+                
+            }
+            
+            typeCountDown = Math.floor( Math.random() * totalFrequency );
+            
+            i=0;
+            while ( typeCountDown > charType[i].frequency[locationType-1] ) {
+                                
+                typeCountDown -= charType[i].frequency[locationType-1];
+                i++;
+                
+            }
+
+            typeofChar = charType[i].typeName;
+            
+            document.getElementById("charLabel").innerHTML = "Realm: " + document.getElementById("realmTypeSelection").innerText.split("\n")[realmType];
+
+            document.getElementById("charLabel").innerHTML += " Location: " + document.getElementById("locationTypeSelection").innerText.split("\n")[locationType];
+
+            document.getElementById("charLabel").innerHTML += " Type: " + typeofChar; // + (charMartial?" (martial)":'');
+            
+            makeCharacter();
+            
+        }
+        
+        function makeAName() {
+            
+            
+            return nameArray[ Math.floor( Math.random() * nameArray.length ) ];
+            
+        }
+        
+        function barehandedDamage (str) { // BHD one die plus what this function returns
+            
+            baseDamage = (-4 + Math.ceil((str-8)/2));
+            
+            if ( baseDamage < -4 ) {
+                baseDamage = -4;
+            }
+        
+            if ( charTalents.indexOf(89) > -1 ) { baseDamage += 3; }
+            else if ( charTalents.indexOf(79) > -1 ) { baseDamage += 2; }
+            else if ( charTalents.indexOf(64) > -1 ) { baseDamage += 1; }
+            
+            return baseDamage;
+            
+        }
+
+        function hideHelp(){
+            
+            document.getElementById("helpDiv").style.display="none";
+            
+        }
+        
+        function showHelp(){
+            
+            document.getElementById("helpDiv").style.display="block";
+            
+        }
+        
+    </script>
+
+    <style>
+        
+        .niftyButton {
+            border: solid thin;
+            margin: 0.5vh;
+            border-radius: 10px;
+            padding: 0.25vh 1vh;
+            text-align: center;
+            box-shadow: 0.2vh 0.4vh;
+            float: right;
+
+        }
+        
+    </style>
+        
+    <body onLoad="initializeApp()" onClick="hideHelp();" style = "overflow: scroll;">
+        
+        Create a new character by tape and race using the left hand box, or by location and realm
+        using the right hand box. 
+        
+        <div style="display: flex; margin:5vh; ">
+        
+            <div  style="flex-grow: 1; border: solid thin; padding: 3vh;  ">
+            
+                Type:
+                <select id="charTypeSelection">
+                </select>
+                <br>
+                <br>
+
+                Race:
+                <select id="charRaceSelection">
+                    <option value=0>Random</option>
+                    <option value=1>Human</option>
+                    <option value=2>Elf</option>
+                    <option value=3>Dwarf</option>
+                    <option value=4>Hafling</option>
+                    <option value=5>Orc</option>
+                    <option value=6>Goblin</option>
+                </select>
+                <br>
+                <br>
+
+                <span class="niftyButton" onclick="generateCharacter();">Generate!</span>
+            
+            </div>
+        
+        
+            <div  style="flex-grow: 2; border: solid thin; padding: 3vh;  ">
+            
+                Location:
+                <select id="locationTypeSelection">
+                    <option value=0>Random</option>
+                    <option value=1>City</option>
+                    <option value=2>Court</option>
+                    <option value=3>Port</option>
+                    <option value=4>Village</option>
+                    <option value=5>Countryside</option>
+                    <option value=6>Road</option>
+                    <option value=7>Wilderness</option>
+                </select>
+                <br>
+                <br>
+
+                Realm:
+                <select id="realmTypeSelection">
+                    <option value=0>Cosmopolitan</option>
+                    <option value=1>Mostly Human</option>
+                    <option value=2>Mostly Elven</option>
+                    <option value=3>Mostly Dwarven</option>
+                    <option value=4>Mostly Halfling</option>
+                    <option value=5>Mostly Orc</option>
+                    <option value=6>Mostly Goblin</option>
+                </select>
+                <br>
+                <br>
+                <span class="niftyButton" onclick="chooseCharType();">Generate!</span>
+             
+            </div>
+        
+        
+            <div style="flex-grow: 3">
+            
+                <span class="niftyButton" style='float: right; ' onclick="event.stopPropagation();showHelp();">Help!</span>
+            
+            </div>
+        
+        
+        </div>
+        
+
+
+        
+        <br>
+        <br>
+        <div id="charLabel"></div>
+        <br>
+        
+        <textarea rows="3" style="font-size:2vh; width: 90%; height: 50vh; " id="characterBox">
+                
+            Make some choices above and press Generate!
+        
+        </textarea>
+        
+        
+        <div id="helpDiv" onclick="hideHelp();" style="display: none; position: fixed; top: 20%; bottom: 20%; left: 20%; right: 20%; border: solid thick; background-color: BlanchedAlmond; color:SaddleBrown; padding: 3.5vh; overflow: auto; z-index: 999;"> 
+        
+            <p>
+                Thanks for trying out this modest NPC generator for The Fantasy Trip! Press a button and get  a character in the standard format, suitable for importing into the TFT Helper mobile app,  Henry Cobb's TFT CP Calculator, and other fine software that uses the official format. You can either choose a type of character and a race, or choose a context and these will be chosen for you.
+            </p>
+            
+            <p>
+                The aim here is to produce some typical folks, not exotic people decked out in adventure hooks. They're fleshed out to be more than wallpaper, but they aren't principle characters. And that means no wizards, no warriors, just casual encounters. 
+            </p>
+                        
+            <p>
+                Needless to say, this could go a lot further, and maybe it will. 
+            </p>
+            
+            <p>
+                You could even gussy this up yourself. The javascript here is, let's call it idiosyncratic, but it should be easy enough to follow. Particularly the charater types near the top. You will instantly see how they are laid out, and you can add any number. Follow the format and they will appear in the Type menu and work. Similarly, you can just add names to the list at the bottom and they will be included in the selection. You can't hurt anything by trying. 
+            </p>
+            
+        </div>
+       
+        <div id="namesDiv" style="display: none;">
+            Abrielle
+            Adair
+            Adara
+            Adriel
+            Aiyana
+            Alissa
+            Alixandra
+            Altair
+            Amara
+            Anatola
+            Anya
+            Arcadia
+            Ariadne
+            Arianwen
+            Aurelia
+            Aurelian
+            Aurelius
+            Avalon
+            Bastian
+            Breena
+            Brielle
+            Cambria
+            Cara
+            Carys
+            Caspian
+            Cassia
+            Cassiel
+            Cassiopeia
+            Cassius
+            Chaniel
+            Cora
+            Corbin
+            Cyprian
+            Daire
+            Darius
+            Destin
+            Drake
+            Drystan
+            Eira
+            Eirian
+            Elysia
+            Eoin
+            Evadne
+            Fineas
+            Finian
+            Fyodor
+            Gareth
+            Gavriel
+            Griffin
+            Guinevere
+            Hadriel
+            Hannelore
+            Hermione
+            Hesperos
+            Iagan
+            Ianthe
+            Ignacia
+            Ignatius
+            Iseult
+            Jessalyn
+            Kara
+            Kerensa
+            Korbin
+            Kyler
+            Kyra
+            Leala
+            Leila
+            Lilith
+            Liora
+            Lucien
+            Lyra
+            Maia
+            Marius
+            Mathieu
+            Mireille
+            Mireya
+            Natania
+            Nerys
+            Nuriel
+            Nyssa
+            Oisin
+            Oralie
+            Orion
+            Orpheus
+            Ozara
+            Peregrine
+            Persephone
+            Perseus
+            Petronela
+            Phelan
+            Qadira
+            Quintessa
+            Raisa
+            Remus
+            Rhyan
+            Rhydderch
+            Riona
+            Saoirse
+            Sarai
+            Sebastian
+            Seraphim
+            Seraphina
+            Sirius
+            Sorcha
+            Tavish
+            Tearlach
+            Terra
+            Thalia
+            Thaniel
+            Theia
+            Torian
+            Torin
+            Tressa
+            Tristana
+            Uriela
+            Urien
+            Vanora
+            Vespera
+            Xanthus
+            Yadira
+            Yseult
+            Zaira
+            Zephyr
+            Zora
+            Zorion
+            Acalia
+            Alaire
+            Auristela
+            Briallan
+            Briseis
+            Dagen
+            Devlin
+            Devlyn
+            Eliron
+            Evanth
+            Gaerwn
+            Ginerva
+            Katriel
+            Kyrielle
+            Leira
+            Liriene
+            Liron
+            Maylea
+            Meira
+            Neirin
+            Nyfain
+            Oleisa
+            Orinthea
+            Pryderi
+            Pyralia
+            Pyralis
+            Quinevere
+            Renfrew
+            Saira
+            Sarielle
+            Serian
+            Severin
+            Ulyssia
+            Vasilis
+            Xara
+            Xylia
+            Yakira
+            Yeira
+            Yeriel
+            Yestin
+            Zaniel
+            Zarek
+            Arthur
+            Albion
+            Aurelius
+            Avalon
+            Bedivere
+            Elaine
+            Morgaine
+            Guinevere
+            Lancelot
+            Blanchefleur
+            Percival
+            Caradoc
+            Emrys
+            Mirian
+            Galahad
+            Owain
+            Fae
+            Faye
+            Gawain
+            Griffin
+            Tristan
+            Isolde
+            Aine
+            Lucan
+            Lunette
+            Altalune
+            Luna
+            Nimue
+            Merlin
+            Taliesin
+            Oberon
+            Titania
+            Auberon
+            Olwyn
+            Ceridwen
+            Tarian
+            Viviane
+            Edith
+            Aneira
+            Arianwen
+            Eilidh
+            Niamh
+            Adara
+            Aileen
+            Alastair
+            Alastriona
+            Bara
+            Eleri
+            Aeron
+            Aeronwy
+            Aeronwen
+            Andreas
+            Aoife
+            Ciaran
+            Caelan
+            Caitriona
+            Alanna
+            Iona
+            Fiona
+            Lorcan
+            Gwenllian
+            Sorcha
+            Lowri
+            Rowena
+            Aodh
+            Arwen
+            Gwenore
+            Arianell
+            Clarine
+            Morrigan
+            Morgana
+            Rhian
+            Senara
+            Yvaine
+            Azalea
+            Belladonna
+            Camellia
+            Darius
+            Endellion
+            Ferelith
+            Ginevra
+            Hestia
+            Io
+            Khione
+            Lysandra
+            Myrcella
+            Orenda
+            Persephone
+            Rosabel
+            Silvana
+            Tamora
+            Moon
+            Crescent
+            Rosella
+            Izora
+            Aislinn
+            Adrienne
+            Amaris
+            Artemis
+            Astraia
+            Astraea
+            Astoria
+            Asteria
+            Astra
+            Astrid
+            Ascella
+            Angeline
+            Anastasia
+            Aurora
+            Autumn
+            Astrophel
+            Belinda
+            Bianca
+            Aud
+            Audrienne
+            Branwen
+            Bronwyn
+            Chandra
+            Calliope
+            Cordelia
+            Clarimond
+            Corisande
+            Clarinda
+            Corinda
+            Sybella
+            Ethelinda
+            Lowenna
+            Sonora
+            Oriana
+            Melisande
+            Melisende
+            Cerelia
+            Cerella
+            Evangelique
+            Evangelia
+            Evangelina
+            Evangeline
+            Gloriana
+            Victoire
+            Corabella
+            Corabel
+            Hesperia
+            Opal
+            Sage
+            Rune
+            River
+            Reverie
+            Dawn
+            Twyla
+            Amira
+            Amina
+            Hecate
+            Artemisia
+            Arella
+            Corbin
+            Dominic
+            Abraxas
+            Evander
+            Leander
+            Lysander
+            Oleander
+            Jocasta
+            Lethia
+            Lavinia
+            Vivia
+            Viviana
+            Briar
+            Willow
+            Calla
+            Lucienne
+            Lucine
+            Lucina
+            Rosina
+            Elara
+            Elora
+            Liora
+            Aithne
+            Zella
+            Rosabella
+            Rosabelle
+            Ailbhe
+            Accalon
+            Adrasteia
+            Agravaine
+            Aileena
+            Ailia
+            Alaw
+            Aleera
+            Aliara
+            Alona
+            Alwenna
+            Ankh
+            Ankhara
+            Ankhe
+            Ankhora
+            Áone
+            Arianrhod
+            Asphodel
+            Auron
+            Bellona
+            Bernia
+            Bloom
+            Braith
+            Caelia
+            Chantrea
+            Charmian
+            Clarion
+            Eirian
+            Elderic
+            Elric
+            Esmeree
+            Eurwyn
+            Glanna
+            Gorlois
+            Igraine
+            Joliette
+            Jorinda
+            Liara
+            Liliwen
+            Lucelia
+            Lugh
+            Maelona
+            Mirth
+            Mithian
+            Mordred
+            Morgause
+            Nox
+            Rhianwen
+            Scythe
+            Sowenna
+            Uriens
+            Uther
+            Yvanna
+            Lydan
+            Syrin
+            Ptorik
+            Joz
+            Varog
+            Gethrod
+            Hezra
+            Feron
+            Ophni
+            Colborn
+            Fintis
+            Gatlin
+            Jinto
+            Hagalbar
+            Krinn
+            Lenox
+            Revvyn
+            Hodus
+            Dimian
+            Paskel
+            Kontas
+            Weston
+            Azamarr
+            Jather
+            Tekren
+            Jareth
+            Adon
+            Zaden
+            Eune
+            Graff
+            Tez
+            Jessop
+            Gunnar
+            Pike
+            Domnhar
+            Baske
+            Jerrick
+            Mavrek
+            Riordan
+            Wulfe
+            Straus
+            Tyvrik
+            Henndar
+            Favroe
+            Whit
+            Jaris
+            Renham
+            Kagran
+            Lassrin
+            Vadim
+            Arlo
+            Quintis
+            Vale
+            Caelan
+            Yorjan
+            Khron
+            Ishmael
+            Jakrin
+            Fangar
+            Roux
+            Baxar
+            Hawke
+            Gatlen
+            Barak
+            Nazim
+            Kadric
+            Paquin
+            Kent
+            Moki
+            Rankar
+            Lothe
+            Ryven
+            Clawsen
+            Pakker
+            Embre
+            Cassian
+            Verssek
+            Dagfinn
+            Ebraheim
+            Nesso
+            Eldermar
+            Rivik
+            Rourke
+            Barton
+            Hemm
+            Sarkin
+            Blaiz
+            Talon
+            Agro
+            Zagaroth
+            Turrek
+            Esdel
+            Lustros
+            Zenner
+            Baashar
+            Dagrod
+            Gentar
+            Feston
+            Syrana
+            Resha
+            Varin
+            Wren
+            Yuni
+            Talis
+            Kessa
+            Magaltie
+            Aeris
+            Desmina
+            Krynna
+            Asralyn
+            Herra
+            Pret
+            Kory
+            Afia
+            Tessel
+            Rhiannon
+            Zara
+            Jesi
+            Belen
+            Rei
+            Ciscra
+            Temy
+            Renalee
+            Estyn
+            Maarika
+            Lynorr
+            Tiv
+            Annihya
+            Semet
+            Tamrin
+            Antia
+            Reslyn
+            Basak
+            Vixra
+            Pekka
+            Xavia
+            Beatha
+            Yarri
+            Liris
+            Sonali
+            Razra
+            Soko
+            Maeve
+            Everen
+            Yelina
+            Morwena
+            Hagar
+            Palra
+            Elysa
+            Sage
+            Ketra
+            Lynx
+            Agama
+            Thesra
+            Tezani
+            Ralia
+            Esmee
+            Heron
+            Naima
+            Rydna
+            Sparrow
+            Baakshi
+            Ibera
+            Phlox
+            Dessa
+            Braithe
+            Taewen
+            Larke
+            Silene
+            Phressa
+            Esther
+            Anika
+            Rasy
+            Harper
+            Indie
+            Vita
+            Drusila
+            Minha
+            Surane
+            Lassona
+            Merula
+            Kye
+            Jonna
+            Lyla
+            Zet
+            Orett
+            Naphtalia
+            Turi
+            Rhays
+            Shike
+            Hartie
+            Beela
+            Leska
+            Vemery
+            Lunex
+            Fidess
+            Tisette
+            Partha            
+        </div>
+        
+        
+    </body>
+
+   
+</html>
+
